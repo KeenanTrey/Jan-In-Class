@@ -45,10 +45,21 @@
         var westWindDb = WebMatrix.Data.Database.Open("WestWindDb");
         if (IsPost)
         {
+            //See if image was included in posted form data
+            if(Request.Files.Count > 0)
+            {
+                catPic = Request.Files[0];
+                mimeType = catPic.ContentType;
+                catPicBytes = new byte[catPic.ContentLength];
+                catPic.InputStream.Read(catPicBytes, 0, catPic.ContentLength);
+            }
             switch (submitType)
             {
                 case "Add":
-
+                    string insertStatement = "INSERT INTO Categories(CatgoryName, Description, Picture, PictureMimeType) VALUES(@0, @1, @2, @3)";
+                    westWindDb.Execute(insertStatement, catName, catDescription, catPicBytes, mimeType);
+                    //Insert gets db to make a categoryID for the new row so we want to grab that new id value
+                    var newID = westWindDb.QueryValue("SELECT SCOPE_IDENTITY()");
                     break;
                 case "Update":
                     <div>Coming next class</div>
@@ -88,12 +99,14 @@
             }
         }//end else
     }
-    <form method="post">
+    <!-- When your form will have an input type = file, then you will need to have the enctype attribute on your form element enctype = multipart/form-data. 
+        No characters encoded. Value requires when you are using forms that have a file upload control-->
+    <form method="post" enctype="multipart/form-data">
         <label>Name</label>
-        <input name="catName" type="text" placeholder="Category Name" value="@catName" />
+        <input name="@nameof(catName)" type="text" placeholder="Category Name" value="@catName" />
 
         <label>Description</label>
-        <input name="catDescription" type="text" placeholder="Description" value="@catDescription" />
+        <input name="@nameof(catDescription)" type="text" placeholder="Description" value="@catDescription" />
 
         <label>Picture</label>
         <input name="catPic" type="file" />
