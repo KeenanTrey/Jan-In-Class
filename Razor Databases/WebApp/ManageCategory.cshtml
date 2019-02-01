@@ -45,7 +45,27 @@
         var westWindDb = WebMatrix.Data.Database.Open("WestWindDb");
         if (IsPost)
         {
+            switch (submitType)
+            {
+                case "Add":
 
+                    break;
+                case "Update":
+                    <div>Coming next class</div>
+                    break;
+                case "Delete":
+                    <div>Slated for 1.0.2 Order now</div>
+                    break;
+                case "Cancel":
+                    Response.Redirect("~", true);
+                    break;
+                default:
+                    <div>
+                        WTF == "What's that for!?"
+                    </div>
+                    break;
+
+            }
         }//end if
         else// get request
         {
@@ -97,7 +117,7 @@
                 <input name="@nameof(submitType)" type="submit" value="Delete" />
             }
             <input name="@nameof(submitType)" type="submit" value="Cancel" />
-            <input name="@nameof(catID)" type="hidden" value="@catID"/>
+            <input name="@nameof(catID)" type="hidden" value="@catID" />
         </fieldset>
     </form>
 </body>
