@@ -1,0 +1,104 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <style rel="stylesheet" media="all">
+        form {
+            display: grid;
+            grid-template-columns: 125px 300px;
+            grid-row-gap: 5px;
+        }
+
+            form > img {
+                grid-column: 2;
+            }
+
+        fieldset {
+            grid-column: 2;
+        }
+
+            fieldset.buttons {
+                border: 0;
+                padding-left: 0;
+                margin-left: 0;
+            }
+    </style>
+</head>
+<body>
+    <h1>Manage Category</h1>
+    @{
+        //Variables for category details (with defaults)
+        //?? is null coalessing operator
+        string catID = Request[nameof(catID)] ?? string.Empty;
+        string catName = Request[nameof(catName)] ?? string.Empty;
+        string catDescription = Request[nameof(catDescription)] ?? string.Empty;
+        string mimeType = string.Empty;
+        byte[] catPicBytes = null;
+        HttpPostedFileBase catPic = null; //Use this for insert update img
+        string submitType = Request[nameof(submitType)] ?? string.Empty;
+
+        //Read data to display
+        //@0 is first placeholder
+        //Never build string with string interpolation
+        //Always use placeholders to pass data to database
+
+        var westWindDb = WebMatrix.Data.Database.Open("WestWindDb");
+        if (IsPost)
+        {
+
+        }//end if
+        else// get request
+        {
+            string query = "SELECT CategoryID, CategoryName, Description, Picture, PictureMimeType FROM Categories WHERE CategoryID = @0";
+            //QuerySingle will return an object representing the row or value null if nothing is found
+            var result = westWindDb.QuerySingle(query, catID);
+
+            if (result == null)
+            {
+                <div>
+                    No category found for @catID.
+                </div>
+            }
+            else
+            {
+                catName = result.CategoryName;
+                catDescription = result.Description;
+                catPicBytes = result.Picture;
+                mimeType = result.PictureMimeType;
+            }
+        }//end else
+    }
+    <form method="post">
+        <label>Name</label>
+        <input name="catName" type="text" placeholder="Category Name" value="@catName" />
+
+        <label>Description</label>
+        <input name="catDescription" type="text" placeholder="Description" value="@catDescription" />
+
+        <label>Picture</label>
+        <input name="catPic" type="file" />
+        @if (catPicBytes != null)
+        {
+            string base64String = Convert.ToBase64String(catPicBytes);
+            string imgSrc = $"data: {mimeType};base64,{base64String}";
+            <text>
+                <img src="@imgSrc" width="75" />
+            </text>
+        }
+
+        <fieldset class="buttons">
+            @if (string.IsNullOrWhiteSpace(catID))
+            {
+                <input name="@nameof(submitType)" type="submit" value="Add" />
+            }
+            else
+            {
+                <input name="@nameof(submitType)" type="submit" value="Update" />
+                <input name="@nameof(submitType)" type="submit" value="Delete" />
+            }
+            <input name="@nameof(submitType)" type="submit" value="Cancel" />
+            <input name="@nameof(catID)" type="hidden" value="@catID"/>
+        </fieldset>
+    </form>
+</body>
+</html>
