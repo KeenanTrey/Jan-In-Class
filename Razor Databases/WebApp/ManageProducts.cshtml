@@ -20,14 +20,12 @@
                 form > select + button {
                     grid-column: 4;
                 }
-
                 form > input[type=checkbox] {
                     grid-column: 2;
                 }
-
-                    form > input[type=checkbox] + label {
-                        grid-column: 3;
-                    }
+                form > input[type=checkbox] + label {
+                    grid-column: 3;
+                }
 
             form > hr {
                 grid-column: 1 / span 4;
@@ -36,7 +34,7 @@
     </style>
 </head>
 <body>
-    @{
+    @{ 
         var westWindDatabase = WebMatrix.Data.Database.Open("WestWindDb");
         string selectedProductId = Request[nameof(selectedProductId)];
         string productName = Request[nameof(productName)];
@@ -59,9 +57,9 @@
         <label for="ProductsList">Products</label>
         <select name="@nameof(selectedProductId)" id="ProductsList">
             <option value="">[Select a Product to Edit]</option>
-            @{
+            @{ 
                 var products = westWindDatabase.Query("SELECT ProductID, ProductName FROM Products");
-                foreach (var row in products)
+                foreach(var row in products)
                 {
                     <option value="@row.ProductID" selected="@(row.ProductID.ToString() == selectedProductId)">@row.ProductName</option>
                 }
@@ -76,9 +74,9 @@
         <label for="SuppliersList">Supplier</label>
         <select name="@nameof(supplierId)" id="SuppliersList">
             <option value="">[Select a Supplier]</option>
-            @{
+            @{ 
                 var suppliers = westWindDatabase.Query("SELECT SupplierID, CompanyName FROM Suppliers");
-                foreach (var row in suppliers)
+                foreach(var row in suppliers)
                 {
                     <option value="@row.SupplierID" selected="@(row.SupplierID.ToString() == supplierId)">@row.CompanyName</option>
                 }

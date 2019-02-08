@@ -27,26 +27,22 @@
 <body>
     <h1>Manage Category</h1>
     @{
-        //Variables for category details (with defaults)
-        //?? is null coalessing operator
-        string catID = Request[nameof(catID)] ?? string.Empty;
+        // variables for Category details (with defaults)
+        // ?? is the "null coalescing operator"
+        string catId = Request[nameof(catId)] ?? string.Empty;
         string catName = Request[nameof(catName)] ?? string.Empty;
         string catDescription = Request[nameof(catDescription)] ?? string.Empty;
         string mimeType = string.Empty;
         byte[] catPicBytes = null;
-        HttpPostedFileBase catPic = null; //Use this for insert update img
+        HttpPostedFileBase catPic = null; // Use this for the insert/update img
         string submitType = Request[nameof(submitType)] ?? string.Empty;
 
-        //Read data to display
-        //@0 is first placeholder
-        //Never build string with string interpolation
-        //Always use placeholders to pass data to database
 
-        var westWindDb = WebMatrix.Data.Database.Open("WestWindDb");
+        var westWindDatabase = WebMatrix.Data.Database.Open("WestWindDb");
         if (IsPost)
         {
-            //See if image was included in posted form data
-            if(Request.Files.Count > 0)
+            // See if an image was included in the Posted form data
+            if (Request.Files.Count > 0 && Request.Files[0].ContentLength > 0)
             {
                 catPic = Request.Files[0];
                 mimeType = catPic.ContentType;
@@ -56,39 +52,87 @@
             switch (submitType)
             {
                 case "Add":
-                    string insertStatement = "INSERT INTO Categories(CatgoryName, Description, Picture, PictureMimeType) VALUES(@0, @1, @2, @3)";
-                    westWindDb.Execute(insertStatement, catName, catDescription, catPicBytes, mimeType);
-                    //Insert gets db to make a categoryID for the new row so we want to grab that new id value
-                    var newID = westWindDb.QueryValue("SELECT SCOPE_IDENTITY()");
+                    string insertStatement;
+                    if (catPicBytes != null)
+                    {
+                        insertStatement = "INSERT INTO Categories(CategoryName, Description, Picture, PictureMimeType) VALUES(@0, @1, @2, @3)";
+                        // The .Execute() method is used to insert/update/delete
+                        westWindDatabase.Execute(insertStatement, catName, catDescription, catPicBytes, mimeType);
+                    }
+                    else
+                    {
+                        insertStatement = "INSERT INTO Categories(CategoryName, Description) VALUES(@0, @1)";
+                        // The .Execute() method is used to insert/update/delete
+                        westWindDatabase.Execute(insertStatement, catName, catDescription);
+                    }
+                    // Inserting gets the Db to make a CategoryID for the new row
+                    // so we want to grab that new identity value.
+                    var newId = westWindDatabase.QueryValue("SELECT SCOPE_IDENTITY()");
+                    catId = newId.ToString();
                     break;
                 case "Update":
-                    <div>Coming next class</div>
+                    string updateStatement;
+                    int rowsAffected;
+                    if (catPicBytes != null)
+                    {
+                        updateStatement = "UPDATE Categories SET CategoryName = @0, Description = @1, Picture = @2, PictureMimeType = @3 WHERE CategoryID = @4";
+                        rowsAffected = westWindDatabase.Execute(updateStatement, catName, catDescription, catPicBytes, mimeType, catId);
+                    }
+                    else
+                    {
+                        updateStatement = "UPDATE Categories SET CategoryName = @0, Description = @1 WHERE CategoryID = @2";
+                        rowsAffected = westWindDatabase.Execute(updateStatement, catName, catDescription, catId);
+                    }
+                    if (rowsAffected == 0)
+                    {
+                        <div>Update failed. Try again or cancel.</div>
+                    }
+                    else
+                    {
+                        <div>Update successful.</div>
+                    }
                     break;
                 case "Delete":
-                    <div>Slated for 1.0.2 Order now</div>
+                    string deleteStatement;
+                    int rowCount;
+                    deleteStatement = "DELETE Categories WHERE CategoryID = @0";
+                    rowCount = westWindDatabase.Execute(deleteStatement, catId);
+                    if (rowCount == 0)
+                    {
+                        <div>Delete failed. Try again or cancel.</div>
+                    }
+                    else
+                    {
+                        <div>Delete successful.</div>
+                        catId = string.Empty;
+                        catName = string.Empty;
+                        catDescription = string.Empty;
+                        catPicBytes = null;
+                        mimeType = string.Empty;
+                    }
                     break;
                 case "Cancel":
                     Response.Redirect("~", true);
                     break;
                 default:
-                    <div>
-                        WTF == "What's that for!?"
-                    </div>
+                    <div>WTF == "What's That For?!"</div>
                     break;
-
             }
-        }//end if
-        else// get request
+        }
+        else // this is a GET request
         {
+            // READ the data to display
+            // @0 is the first placeholder position
+            // NEVER, EVER build the string using string interpolation
+            // ALWAYS use placeholders to pass data to the database
             string query = "SELECT CategoryID, CategoryName, Description, Picture, PictureMimeType FROM Categories WHERE CategoryID = @0";
-            //QuerySingle will return an object representing the row or value null if nothing is found
-            var result = westWindDb.QuerySingle(query, catID);
+            // .QuerySingle will return an object representing the row
+            // or the value null if nothing was found.
+            var result = westWindDatabase.QuerySingle(query, catId);
 
             if (result == null)
             {
-                <div>
-                    No category found for @catID.
-                </div>
+                <div>You are in <b>ADD</b> mode.</div>
             }
             else
             {
@@ -97,10 +141,14 @@
                 catPicBytes = result.Picture;
                 mimeType = result.PictureMimeType;
             }
-        }//end else
+        } // end of if(IsPost)...else...
     }
-    <!-- When your form will have an input type = file, then you will need to have the enctype attribute on your form element enctype = multipart/form-data. 
-        No characters encoded. Value requires when you are using forms that have a file upload control-->
+    <!-- When your form will have an <input type="file" />,
+     then you will need to have the enctype attribute
+     on your <form> element. enctype means "Encoding Type"
+     - enctype="multipart/form-data"
+       No characters are encoded. This value is required when
+       you are using forms that have a file upload control.-->
     <form method="post" enctype="multipart/form-data">
         <label>Name</label>
         <input name="@nameof(catName)" type="text" placeholder="Category Name" value="@catName" />
@@ -113,24 +161,24 @@
         @if (catPicBytes != null)
         {
             string base64String = Convert.ToBase64String(catPicBytes);
-            string imgSrc = $"data: {mimeType};base64,{base64String}";
+            string imageSrc = $"data:{mimeType};base64,{base64String}";
             <text>
-                <img src="@imgSrc" width="75" />
+                <img src="@imageSrc" width="75" />
             </text>
         }
 
         <fieldset class="buttons">
-            @if (string.IsNullOrWhiteSpace(catID))
+            @if (string.IsNullOrWhiteSpace(catId))
             {
-                <input name="@nameof(submitType)" type="submit" value="Add" />
+                <input name="submitType" type="submit" value="Add" />
             }
             else
             {
-                <input name="@nameof(submitType)" type="submit" value="Update" />
-                <input name="@nameof(submitType)" type="submit" value="Delete" />
+                <input name="submitType" type="submit" value="Update" />
+                <input name="submitType" type="submit" value="Delete" onclick="return confirm('Are you sure you want to permanently remove this category?')" />
             }
-            <input name="@nameof(submitType)" type="submit" value="Cancel" />
-            <input name="@nameof(catID)" type="hidden" value="@catID" />
+                <button name="@nameof(submitType)" type="submit" value="Cancel">Return to viewing the Category List</button>
+            <input name="@nameof(catId)" type="hidden" value="@catId" />
         </fieldset>
     </form>
 </body>
