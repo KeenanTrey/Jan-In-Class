@@ -45,7 +45,7 @@
 </head>
 <body>
     @{
-        var westWindDatabase = WebMatrix.Data.Database.Open("WestWindDb");
+        var westWindDatabase = WebMatrix.Data.Database.Open("WestWindD");
         string selectedProductId = Request[nameof(selectedProductId)];
         string productName = Request[nameof(productName)];
         string supplierId = Request[nameof(supplierId)];
@@ -57,44 +57,40 @@
         string submitAction = Request[nameof(submitAction)];
     }
     <div class="diagnostics">
-        <!-- TODO Put this  in a razor Helper -->
+        <!-- TODO: Put this in a Razor Helper -->
         <h4>Diagnostics</h4>
-        <div>Submitting the @submitAction request</div>
-        <p>Before Processing post-back</p>
+        <p>Before processing the post-back:</p>
+        <div>Processing the <b>@submitAction</b> Request</div>
         @selectedProductId
         @supplierId
         @categoryId
     </div>
 
-
     <h1>Manage Products</h1>
     <div>
         @if (IsPost)
         {
-            //Process the forms post requests
+            // Process the form's post requests
             string sql;
             switch (submitAction)
             {
                 case "Edit":
-                    sql = "SELECT ProductName, SupplierID, CategoryID, UnitPrice, QuantityPerUnit, Discontinued FROM Products WHERE ProductID = @0";
+                    sql = "SELECT ProductName, SupplierID, CategoryID, UnitPrice, QuantityPerUnit, UnitsOnOrder, Discontinued FROM Products WHERE ProductID = @0";
                     break;
-
                 case "Add":
-                    sql = "INSERT INTO Products(ProductName, SupplierID, CategoryID, UnitPrice, QuantityPerUnit, UnitsOnOrder, Discontinued VALUES(@0, @1, @2, @3 ,#4, @5, @6))";
-                    //After insert
-                    sql = "SELECT SCOPE IDNETITY()";
+                    sql = "INSERT INTO Products(ProductName, SupplierID, CategoryID, UnitPrice, QuantityPerUnit, UnitsOnOrder, Discontinued) VALUES(@0, @1, @2, @3, @4, @5, @6)";
+                    // After successful insert
+                    sql = "SELECT SCOPE_IDENTITY()";
                     break;
                 case "Update":
-                    sql = "UPDATE Products SET ProductName = @0, SupplierID = @1, CategoryID = @2, UnitPrice = @3, Quantity = @4, UnitsOnOrder = @5, Discontinued @6 WHERE ProductId= @7";
+                    sql = "UPDATE Products SET ProductName = @0, SupplierID = @1, CategoryID = @2, UnitPrice = @3, QuantityPerUnit = @4, UnitsOnOrder = @5, Discontinued = @6 WHERE ProductID = @7";
                     break;
-
                 case "Delete":
                     sql = "DELETE FROM Products WHERE ProductID = @0";
                     break;
-
                 case "Clear":
                     const string dropDownDefault = "0";
-                    selectedProductId = dropDownDefault; //Default
+                    selectedProductId = dropDownDefault; // default
                     productName = string.Empty;
                     supplierId = dropDownDefault;
                     categoryId = dropDownDefault;
@@ -102,85 +98,127 @@
                     qtyPerUnit = string.Empty;
                     onOrder = string.Empty;
                     isDiscontinued = string.Empty;
-
                     break;
-
                 default:
-                    <text>Unkown post back option: cannot @submitAction your request</text>
+                    <text>Unknown post-back option: Cannot @submitAction your request.</text>
                     break;
             }
         }
         else
         {
-            <text>Use this form to manage items in the product catalog</text>
+            <text>Use this form to manage items in the Product catalog.</text>
         }
     </div>
 
+    @{
+        var products = QueryDatabase(westWindDatabase, "SELECT ProductID, ProductName FROM Products");
+
+        if (products is Exception)
+        {
+            <div>There was a problem accessing the database: @products.Message </div>
+        }
+        else
+        {
+            <form method="post">
+                <label for="ProductsList">Products</label>
+                <select name="@nameof(selectedProductId)" id="ProductsList">
+                    <option value="">[Select a Product to Edit]</option>
+                    @{
+                        //var products = westWindDatabase.Query("SELECT ProductID, ProductName FROM Products");
 
 
-    <form method="post">
-        <label for="ProductsList">Products</label>
-        <select name="@nameof(selectedProductId)" id="ProductsList">
-            <option value="">[Select a Product to Edit]</option>
-            @{
-                var products = westWindDatabase.Query("SELECT ProductID, ProductName FROM Products");
-                foreach (var row in products)
-                {
-                    <option value="@row.ProductID" selected="@(row.ProductID.ToString() == selectedProductId)">@row.ProductName</option>
-                }
-            }
-        </select>
-        <button type="submit" name="submitAction" value="Edit">Edit</button>
-        <hr />
 
-        <label for="ProductName">Name</label>
-        <input type="text" name="@productName" id="ProductName" />
-
-        <label for="SuppliersList">Supplier</label>
-        <select name="@nameof(supplierId)" id="SuppliersList">
-            <option value="">[Select a Supplier]</option>
-            @{
-                var suppliers = westWindDatabase.Query("SELECT SupplierID, CompanyName FROM Suppliers");
-                foreach (var row in suppliers)
-                {
-                    <option value="@row.SupplierID" selected="@(row.SupplierID.ToString() == supplierId)">@row.CompanyName</option>
-                }
-            }
-        </select>
-
-        <label for="CategoriesList">Category</label>
-        <select name="@nameof(categoryId)" id="CategoriesList">
-            <option value="">[Select a Category]</option>
-            @{
-                var categories = westWindDatabase.Query("SELECT CategoryID, CategoryName FROM Categories");
-                foreach (var row in categories)
-                {
-                    <option value="@row.CategoryID" selected="@(row.CategoryID.ToString() == categoryId)">@row.CategoryName</option>
-                }
-            }
-        </select>
+                        foreach (var row in products)
+                        {
+                            <option value="@row.ProductID" selected="@(row.ProductID.ToString() == selectedProductId)">@row.ProductName</option>
+                        }
 
 
-        <label for="UnitPrice">Unit Price</label>
-        <input type="text" name="unitPrice" id="UnitPrice" />
 
-        <label for="QtyPerUnit">Quantity Per Unit</label>
-        <input type="text" name="qtyPerUnit" id="QtyPerUnit" />
+                    }
+                </select>
+                <button type="submit" name="submitAction" value="Edit">Edit</button>
+                <hr />
 
-        <label for="OnOrder">On Order</label>
-        <input type="text" name="onOrder" id="OnOrder" />
+                <label for="ProductName">Name</label>
+                <input type="text" name="@productName" id="ProductName" />
 
-        <label for="IsDiscontinued">Discontinued</label>
-        <input type="checkbox" name="isDiscontinued" id="IsDiscontinued" />
-        <label for="IsDiscontinued">Check if Discontinued</label>
+                <label for="SuppliersList">Supplier</label>
+                <select name="@nameof(supplierId)" id="SuppliersList">
+                    <option value="">[Select a Supplier]</option>
+                    @{
+                        var suppliers = westWindDatabase.Query("SELECT SupplierID, CompanyName FROM Suppliers");
+                        foreach (var row in suppliers)
+                        {
+                            <option value="@row.SupplierID" selected="@(row.SupplierID.ToString() == supplierId)">@row.CompanyName</option>
+                        }
+                    }
+                </select>
 
-        <fieldset>
-            <button type="submit" name="submitAction" value="Add">Add new product</button>
-            <button type="submit" name="submitAction" value="Update">Update Product</button>
-            <button type="submit" name="submitAction" value="Delete">Remove From Catalog</button>
-            <button type="submit" name="submitAction" value="Clear">Clear Form</button>
-            <input type="reset" value="Reset Form" />
-        </fieldset>
-    </form>
+                <label for="CategoriesList">Category</label>
+                <select name="@nameof(categoryId)" id="CategoriesList">
+                    <option value="">[Select a Category]</option>
+                    @{
+                        //var categories = westWindDatabase.Query("SELECT CategoryID, CategoryName FROM Categories");
+                        var categories = QueryDatabase(westWindDatabase, "SELECT CategoryID, CategoryName FROM Categories");
+                        if (categories is Exception)
+                        {
+                            <option value="">[Product unvailable]</option>
+                        }
+                        else
+                        {
+                            foreach (var row in categories)
+                            {
+                                <option value="@row.CategoryID" selected="@(row.CategoryID.ToString() == categoryId)">@row.CategoryName</option>
+                            }
+                        }
+
+                    }
+                </select>
+
+
+                <label for="UnitPrice">Unit Price</label>
+                <input type="text" name="unitPrice" id="UnitPrice" />
+
+                <label for="QtyPerUnit">Quantity Per Unit</label>
+                <input type="text" name="qtyPerUnit" id="QtyPerUnit" />
+
+                <label for="OnOrder">On Order</label>
+                <input type="text" name="onOrder" id="OnOrder" />
+
+                <label for="IsDiscontinued">Discontinued</label>
+                <input type="checkbox" name="isDiscontinued" id="IsDiscontinued" />
+                <label for="IsDiscontinued">Check if Discontinued</label>
+
+                <fieldset>
+                    <button type="submit" name="submitAction" value="Add">Add New Product</button>
+                    <button type="submit" name="submitAction" value="Update">Update Product</button>
+                    <button type="submit" name="submitAction" value="Delete">Remove From Catalog</button>
+                    <button type="submit" name="submitAction" value="Clear">Clear Form</button>
+                    <input type="reset" value="Reset Form" />
+                </fieldset>
+            </form>
+        }
+    }
+
+    
 </body>
 </html>
+
+@functions {
+    private dynamic QueryDatabase(WebMatrix.Data.Database db, string query)
+    {
+        dynamic result;
+        try
+        {
+            result = db.Query(query);
+        }
+        catch (Exception ex)
+        {
+            result = ex;
+        }
+        return result;
+    }
+
+
+}
