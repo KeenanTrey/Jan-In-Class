@@ -45,7 +45,7 @@
 </head>
 <body>
     @{
-        var westWindDatabase = WebMatrix.Data.Database.Open("WestWindD");
+        var westWindDatabase = WebMatrix.Data.Database.Open("WestWindDb");
         string selectedProductId = Request[nameof(selectedProductId)];
         string productName = Request[nameof(productName)];
         string supplierId = Request[nameof(supplierId)];
@@ -60,6 +60,19 @@
         <!-- TODO: Put this in a Razor Helper -->
         <h4>Diagnostics</h4>
         <p>Before processing the post-back:</p>
+        <div>
+            Testing error reporting:
+            @{
+                try
+                {
+                    throw new NotImplementedException("Just testing errors");
+                }
+                catch (Exception ex)
+                {
+                    @ReportError(ex)
+                }
+            }
+        </div>
         <div>Processing the <b>@submitAction</b> Request</div>
         @selectedProductId
         @supplierId
@@ -72,19 +85,27 @@
         {
             // Process the form's post requests
             string sql;
+            int count;
+            Exception error;
             switch (submitAction)
             {
                 case "Edit":
                     sql = "SELECT ProductName, SupplierID, CategoryID, UnitPrice, QuantityPerUnit, UnitsOnOrder, Discontinued FROM Products WHERE ProductID = @0";
+                    var result = QueryDatabase(westWindDatabase, sql, selectedProductId);
+                    // todo- need query function w/ params error = Execute(westWindDatabase, out count, sql, selectedProductId);
                     break;
                 case "Add":
                     sql = "INSERT INTO Products(ProductName, SupplierID, CategoryID, UnitPrice, QuantityPerUnit, UnitsOnOrder, Discontinued) VALUES(@0, @1, @2, @3, @4, @5, @6)";
+                    error = Execute(westWindDatabase, out count, sql, productName, supplierId, categoryId, unitPrice, qtyPerUnit, onOrder, isDiscontinued);
+                    //todo - error processing
                     // After successful insert
                     sql = "SELECT SCOPE_IDENTITY()";
                     break;
                 case "Update":
                     sql = "UPDATE Products SET ProductName = @0, SupplierID = @1, CategoryID = @2, UnitPrice = @3, QuantityPerUnit = @4, UnitsOnOrder = @5, Discontinued = @6 WHERE ProductID = @7";
+
                     break;
+
                 case "Delete":
                     sql = "DELETE FROM Products WHERE ProductID = @0";
                     break;
@@ -115,7 +136,8 @@
 
         if (products is Exception)
         {
-            <div>There was a problem accessing the database: @products.Message </div>
+            //Call razor helper with @, to acknowledge that it can output HTML content inside method
+            @ReportError(products)
         }
         else
         {
@@ -147,7 +169,8 @@
                 <select name="@nameof(supplierId)" id="SuppliersList">
                     <option value="">[Select a Supplier]</option>
                     @{
-                        var suppliers = westWindDatabase.Query("SELECT SupplierID, CompanyName FROM Suppliers");
+                        //var suppliers = westWindDatabase.Query("SELECT SupplierID, CompanyName FROM Suppliers");
+                        var suppliers = QueryDatabase(westWindDatabase, "SELECT SupplierID, CompanyName FROM Suppliers");
                         foreach (var row in suppliers)
                         {
                             <option value="@row.SupplierID" selected="@(row.SupplierID.ToString() == supplierId)">@row.CompanyName</option>
@@ -201,17 +224,53 @@
         }
     }
 
-    
+
 </body>
 </html>
 
+@helper ReportError(Exception ex)
+{
+    //Helpers can render to browser output
+    if (ex != null)
+    {
+        string stackTrace = ex.StackTrace.Replace(" at ", "<br/>at ").Replace(" in ", "<br/> in ");
+        <div>
+            There was was a problem accessing the database: @ex.Message
+            <details>
+                <summary>Stack Trace</summary>
+                <pre>@Html.Raw(stackTrace)</pre>
+            </details>
+        </div>
+    }
+}
+
 @functions {
-    private dynamic QueryDatabase(WebMatrix.Data.Database db, string query)
+    // Razor functions CAN NOT directly output/render to browser response.
+
+
+
+    private Exception Execute(WebMatrix.Data.Database db, out int count, string sql, params object[] values)
+    {
+        count = 0;
+        Exception result = null;
+        try
+        {
+            db.Execute(sql, values);
+
+        }
+        catch (Exception ex)
+        {
+            result = ex;
+        }
+        return result;
+    }
+
+    private dynamic QueryDatabase(WebMatrix.Data.Database db, string query, params object[] values)
     {
         dynamic result;
         try
         {
-            result = db.Query(query);
+            result = db.Query(query, values);
         }
         catch (Exception ex)
         {
