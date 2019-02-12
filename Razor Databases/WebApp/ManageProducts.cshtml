@@ -171,9 +171,16 @@
                     @{
                         //var suppliers = westWindDatabase.Query("SELECT SupplierID, CompanyName FROM Suppliers");
                         var suppliers = QueryDatabase(westWindDatabase, "SELECT SupplierID, CompanyName FROM Suppliers");
-                        foreach (var row in suppliers)
+                        if (suppliers is Exception)
                         {
-                            <option value="@row.SupplierID" selected="@(row.SupplierID.ToString() == supplierId)">@row.CompanyName</option>
+                            <option value="">[Suppliers unavailable]</option>
+                        }
+                        else
+                        {
+                            foreach (var row in suppliers)
+                            {
+                                <option value="@row.SupplierID" selected="@(row.SupplierID.ToString() == supplierId)">@row.CompanyName</option>
+                            }
                         }
                     }
                 </select>
@@ -195,7 +202,6 @@
                                 <option value="@row.CategoryID" selected="@(row.CategoryID.ToString() == categoryId)">@row.CategoryName</option>
                             }
                         }
-
                     }
                 </select>
 
@@ -224,13 +230,14 @@
         }
     }
 
-
+    
 </body>
 </html>
 
 @helper ReportError(Exception ex)
 {
     //Helpers can render to browser output
+    //Call this helper by: @ReportError(err)
     if (ex != null)
     {
         string stackTrace = ex.StackTrace.Replace(" at ", "<br/>at ").Replace(" in ", "<br/> in ");
