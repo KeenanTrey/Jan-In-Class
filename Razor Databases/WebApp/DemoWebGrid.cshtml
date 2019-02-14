@@ -1,6 +1,7 @@
 ﻿@{ 
     Layout = "~/_Layout.cshtml";
     Page.Title = "Demo webgrid: Serch products by category";
+    var page = Request["page"];
 
     var db = WebMatrix.Data.Database.Open("WestWindDb");
     var allCategories = db.Query("SELECT CategoryID, CategoryName FROM Categories");
@@ -10,34 +11,38 @@
     catOptions.Add(new SelectListItem { Value = "", Text = "[Select a category]" });
     foreach(var item in allCategories)
     {
-        catOptions.Add(new SelectListItem { Text = item.CategoryName, Value = item.CategoryID.ToString() });
+        catOptions.Add(new SelectListItem { Text = item.CategoryName, Value = item.CategoryID.ToString(), Selected = item.CategoryID.ToString() == categorySelection });
     }
 }
 <div>
     <h2>Search Products by category</h2>
-    <form method="post">
+    page number = @page
+    <form id="myForm" method="post">
         Category:
-        @Html.DropDownList(nameof(categorySelection), catOptions)
+        @Html.DropDownList(nameof(categorySelection), categorySelection,catOptions)
         <button type="submit">Look up Products</button>
-    </form>
 
-    @if (IsPost)
-    {
-        <hr />
-        int catId;
-        if (!int.TryParse(categorySelection, out catId))
+
+        @if (IsPost)
         {
-            <div>Please select an actual category before clicking the look up button</div>
+            <hr />
+            int catId;
+            if (!int.TryParse(categorySelection, out catId))
+            {
+                <div>Please select an actual category before clicking the look up button</div>
+            }
+            else
+            {
+                var products = db.Query("SELECT ProductID, ProductName, QuantityPerUnit, UnitPrice FROM Products WHERE CategoryID = @0", catId);
+                //Create mygrid w/ result data
+                var myGrid = new WebGrid(products);
+                //mygrid.pageindex = ;
+                <div>
+                    <h3>Products</h3>
+                    @*Pass in data to .getHtml via named parameter*@
+                    @myGrid.GetHtml(columns: myGrid.Columns(myGrid.Column(columnName: "ProductName", header: "Product Name"), myGrid.Column(columnName: "QuantityPerUnit", header: "Qty per Unit"), myGrid.Column(columnName: "UnitPrice", header: "Unit Price", format: @<text>@item.UnitPrice.ToString("C")</text>), myGrid.Column(columnName: "ProductID", header: "Action", format: @<text><form method="post" action="~/ManageProducts.cshtml"><button type="submit">Edit</button><input type="hidden" name="" value="@item.ProductID" /></form></text>))) 
+                </div>
+            }
         }
-        else
-        {
-            var products = db.Query("SELECT ProductID, ProductName, QuantityPerUnit, UnitPrice FROM Products WHERE CategoryID = @0", catId);
-            //Create mygrid
-            var myGrid = new WebGrid(products);
-            <div>
-                <h3>Products</h3>
-                @myGrid.GetHtml()
-            </div>
-        }
-    }
+    </form>
 </div>
