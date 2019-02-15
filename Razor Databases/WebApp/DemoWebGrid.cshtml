@@ -40,7 +40,8 @@
         {
             var products = db.Query("SELECT ProductID, ProductName, QuantityPerUnit, UnitPrice FROM Products WHERE CategoryID = @0", catId);
             // Create a WebGrid with the resulting data
-            var myGrid = new WebGrid(products);
+            //Turning of paging and sorting on webgrid so we don't hav to worry about missing data sent with both post and get requests (There are better ways now in the late 2010s)
+            var myGrid = new WebGrid(products, canPage: false, canSort: false);
             <div>
                 <h3>Products</h3>
                 @* Pass in data to my .GetHTML via named paramters *@
@@ -52,7 +53,7 @@
                       myGrid.Column(columnName: "ProductID", header: "Action",
                                     format: @<text>
                                         <form method="post" action="~/ManageProducts.cshtml">
-                                            <button type="submit">Edit</button>
+                                            <button type="submit" name="submitAction" value="Edit">Edit</button>
                                             <input type="hidden" name="selectedProductId" value="@item.ProductID" />
                                         </form>
                                     </text>)))
