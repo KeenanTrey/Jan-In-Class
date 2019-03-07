@@ -17,7 +17,7 @@
                 <asp:TextBox runat="server" ID="TextBox1" />
 
                 <asp:Label ID="Label2" runat="server" AssociatedControlID="TextBox2">TextBox - Password</asp:Label>
-                <asp:TextBox runat="server" ID="TextBox2" TextMode="Password"
+                <asp:TextBox runat="server" ID="TextBox2" TextMode="Password" 
                      BackColor="YellowGreen" ForeColor="Orange" 
                      Font-Italic="true" />
 
@@ -64,7 +64,7 @@
                 <asp:TextBox runat="server" ID="TextBox16" TextMode="Week" />
 
                 <asp:Label ID="Label18" runat="server" AssociatedControlID="TextBox18">TextBox - Range</asp:Label>
-                <asp:TextBox runat="server" ID="TextBox18" TextMode="Range" />
+                <asp:TextBox runat="server" ID="TextBox18" TextMode="Range" min="-70" max="45" step="2" />
 
                 <asp:Label ID="Label7" runat="server" AssociatedControlID="TextBox7">TextBox - MultiLine</asp:Label>
                 <asp:TextBox runat="server" ID="TextBox7" TextMode="MultiLine" Rows="5" />

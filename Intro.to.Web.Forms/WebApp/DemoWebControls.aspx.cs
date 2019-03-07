@@ -21,6 +21,8 @@ namespace WebApp
             // The name (id) of the control, .Text gets/sets the value for a TextBox, Label, and Literal control.
             string result = "";
 
+            result += "From type=range: " + TextBox18.Text;
+
             result += "From type=text : '" + TextBox1.Text + "' <br />";
             double numberValue;
             if(double.TryParse(TextBox3.Text, out numberValue))

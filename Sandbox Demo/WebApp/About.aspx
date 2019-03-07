@@ -95,6 +95,7 @@
     <%--Table with css styling (border, spacing etc) with calendar content displayed--%>
     <asp:Calendar ID="Calendar1" runat="server"></asp:Calendar>
     <hr />
+    <%--a atttribute with javascript to doPostBack--%>
     <asp:LinkButton ID="Interact" runat="server" CssClass="btn btn-primary" OnClick="Interact_Click">Programmatically Interact With Controls</asp:LinkButton>
     <asp:Label ID="Results" runat="server" />
 </asp:Content>
