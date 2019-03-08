@@ -11,4 +11,14 @@ public partial class Practice_Default : System.Web.UI.Page
     {
 
     }
+
+    protected void Search_Click(object sender, EventArgs e)
+    {
+
+    }
+
+    protected void Add_Click(object sender, EventArgs e)
+    {
+
+    }
 }
