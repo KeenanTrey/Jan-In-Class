@@ -18,5 +18,10 @@ namespace KDContest
         {
 
         }
+
+        protected void ClearForm_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
