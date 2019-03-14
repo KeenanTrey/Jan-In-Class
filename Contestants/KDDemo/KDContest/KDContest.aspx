@@ -53,7 +53,7 @@
 
             </fieldset>
             <br />
-            <asp:LinkButton ID="Submit" runat="server" Text="Submit" OnClick="Subit_Click" CssClass="btn btn-default" />
+            <asp:LinkButton ID="Submit" runat="server" Text="Submit" OnClick="Submit_Click" CssClass="btn btn-default" />
             <asp:LinkButton ID="ClearForm" runat="server" Text="Clear Form" OnClick="ClearForm_Click" CssClass="btn btn-default" />
             <p>Note: You must agree to the contest terms in oder to be entered.</p>
         </div>
@@ -62,6 +62,7 @@
             <%--validation--%>
             <asp:Label ID="MessageLabel" runat="server" />
             <asp:ValidationSummary ID="ValidationSummary" runat="server" CssClass="alert alert-warning" HeaderText="Please fix these problems before submitting" />
+            <asp:GridView ID="Submissions" runat="server" CssClass="table table-hover" />
 
             <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" ControlToValidate="FirstName" Display="None" ErrorMessage="You must display your first name" />
             
