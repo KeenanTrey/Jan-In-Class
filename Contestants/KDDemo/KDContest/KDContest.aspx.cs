@@ -13,5 +13,10 @@ namespace KDContest
         {
 
         }
+
+        protected void Subit_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
