@@ -5,6 +5,10 @@ VisualStudioVersion = 15.0.27703.2026
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApp", "WebApp\WebApp.csproj", "{4319BC50-9B9B-4D6A-B801-4190E156C6E9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WestWindSystem", "WestWindSystem\WestWindSystem.csproj", "{B2843A1E-7175-4C60-BE50-EE7EA0F692A1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WestWindModels", "WestWindModels\WestWindModels.csproj", "{BE53D2D1-0D2B-4B7E-B9AC-CA838E7C4090}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{4319BC50-9B9B-4D6A-B801-4190E156C6E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4319BC50-9B9B-4D6A-B801-4190E156C6E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4319BC50-9B9B-4D6A-B801-4190E156C6E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B2843A1E-7175-4C60-BE50-EE7EA0F692A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2843A1E-7175-4C60-BE50-EE7EA0F692A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2843A1E-7175-4C60-BE50-EE7EA0F692A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2843A1E-7175-4C60-BE50-EE7EA0F692A1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BE53D2D1-0D2B-4B7E-B9AC-CA838E7C4090}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE53D2D1-0D2B-4B7E-B9AC-CA838E7C4090}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE53D2D1-0D2B-4B7E-B9AC-CA838E7C4090}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE53D2D1-0D2B-4B7E-B9AC-CA838E7C4090}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
