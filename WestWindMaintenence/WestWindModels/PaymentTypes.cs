@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace WestWindModels
 {
+    [Table]
     public class PaymentTypes
     {
         public int PaymentTypeID { get; set; }

@@ -13,14 +13,16 @@ namespace WestWindModels
     public class Product
     {
         [Key]
-        public int ProductID { get; set; }
-        public string ProductName { get; set; }
-        public int SupplierID { get; set; }
-        public int CategoryID{ get; set; }
-        public string QuantityPerUnit{ get; set; }
-        public decimal UnitPrice { get; set; }
-        public int UnitsOnOrder { get; set; }
-        public bool IsDiscontinued { get; set; }
+        public int ProductID { get; set; } // int not null
+        public string ProductName { get; set; } //nvarchar not null
+        public int SupplierID { get; set; } // int not null
+        public int CategoryID{ get; set; } // int not null
+        public string QuantityPerUnit{ get; set; } // varchar not null
+        public short? MinimumOrderQuantity { get; set; } //small int  null
+        //? = shorthand nullable<short>
+        public decimal UnitPrice { get; set; } //money not null
+        public int UnitsOnOrder { get; set; } //int not null
+        public bool IsDiscontinued { get; set; } //bit not null
        
     }
 
