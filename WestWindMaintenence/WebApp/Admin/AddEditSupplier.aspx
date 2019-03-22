@@ -29,8 +29,44 @@
     <div class="row">
         <div class="col-md-12">
             <%--todo: add all supplier properties--%>
-           <asp:Label ID="" runat="server" Text="Supplier ID" />
-           <asp:TextBox ID="" runat="server" Enabled="false" />
+            <fieldset>
+                <legend>Supplier Details</legend>
+                <asp:Label ID="Label2" runat="server" Text="Supplier ID" AssociatedControlID="CurrentSupplier"></asp:Label>
+                <asp:TextBox ID="CurrentSupplier" runat="server" Enabled="false"></asp:TextBox>
+
+                <asp:Label ID="Label3" runat="server" Text="Catgeory Name" AssociatedControlID="CompanyName"></asp:Label>
+                <asp:TextBox ID="CompanyName" runat="server"></asp:TextBox>
+
+                <asp:Label ID="Label4" runat="server" Text="Contact name" AssociatedControlID="ContactName"></asp:Label>
+                <asp:TextBox ID="ContactName" runat="server"></asp:TextBox>
+
+                <asp:Label ID="Label5" runat="server" Text="Contact Title" AssociatedControlID="ContactTitle"></asp:Label>
+                <asp:TextBox ID="ContactTitle" runat="server"></asp:TextBox>
+
+                <asp:Label ID="Label16" runat="server" Text="Email Address" AssociatedControlID="Email"></asp:Label>
+                <asp:TextBox ID="Email" runat="server"></asp:TextBox>
+
+                <asp:Label ID="Label7" runat="server" Text="Address" AssociatedControlID="Address"></asp:Label>
+                <asp:TextBox ID="Address" runat="server"></asp:TextBox>
+
+                <asp:Label ID="Label8" runat="server" Text="City" AssociatedControlID="City"></asp:Label>
+                <asp:TextBox ID="City" runat="server"></asp:TextBox>
+
+                <asp:Label ID="Label9" runat="server" Text="Region" AssociatedControlID="Region"></asp:Label>
+                <asp:TextBox ID="Region" runat="server"></asp:TextBox>
+
+                <asp:Label ID="Label10" runat="server" Text="Postal Code" AssociatedControlID="PostalCode"></asp:Label>
+                <asp:TextBox ID="PostalCode" runat="server"></asp:TextBox>
+
+                <asp:Label ID="Label11" runat="server" Text="Country" AssociatedControlID="CountryDropDown"></asp:Label>
+                <asp:DropDownList ID="CountryDropDown" runat="server"></asp:DropDownList>
+
+                <asp:Label ID="Label12" runat="server" Text="Phone" AssociatedControlID="Phone"></asp:Label>
+                <asp:TextBox ID="Phone" runat="server"></asp:TextBox>
+
+                <asp:Label ID="Label13" runat="server" Text="Fax" AssociatedControlID="Fax"></asp:Label>
+                <asp:TextBox ID="Fax" runat="server"></asp:TextBox>
+            </fieldset>
 
 
         </div>
