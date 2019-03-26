@@ -34,7 +34,7 @@
                 <asp:Label ID="Label2" runat="server" Text="Supplier ID" AssociatedControlID="CurrentSupplier"></asp:Label>
                 <asp:TextBox ID="CurrentSupplier" runat="server" Enabled="false"></asp:TextBox>
 
-                <asp:Label ID="Label3" runat="server" Text="Catgeory Name" AssociatedControlID="CompanyName"></asp:Label>
+                <asp:Label ID="Label3" runat="server" Text="Company Name" AssociatedControlID="CompanyName"></asp:Label>
                 <asp:TextBox ID="CompanyName" runat="server"></asp:TextBox>
 
                 <asp:Label ID="Label4" runat="server" Text="Contact name" AssociatedControlID="ContactName"></asp:Label>
