@@ -21,7 +21,7 @@ namespace WebApp.Admin
         #region Page Events
         protected void Page_Load(object sender, EventArgs e)
         {
-            MessagePanel.Visible = false; 
+            MessagePanel.Visible = false;
             if (!IsPostBack)
             {
                 try
@@ -43,7 +43,7 @@ namespace WebApp.Admin
             //Check that supplier selected is not prompt line (index 0)
             if (SupplierDropDown.SelectedIndex == 0)
             { //Error message
-                ShowMessage( "Please select a supplier before clicking the lookup button", STYLE_INFO);
+                ShowMessage("Please select a supplier before clicking the lookup button", STYLE_INFO);
             }
             else
             {
@@ -71,7 +71,7 @@ namespace WebApp.Admin
                 catch (Exception ex)
                 {
                     //Display Error
-                   ShowMessage(ex.Message, STYLE_WARNING);
+                    ShowMessage(ex.Message, STYLE_WARNING);
                 }
             }
         }
@@ -111,6 +111,55 @@ namespace WebApp.Admin
             MessagePanel.CssClass = $"alert {style} alert-dismissible";
             MessagePanel.Visible = true;
         }
+
+        protected void AddSupplier_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                //TODO: Validation
+                //Create a Supplier object from the data in the form
+                Supplier item = new Supplier();
+                item.CompanyName = CompanyName.Text;
+                item.ContactName = ContactName.Text;
+                if (!string.IsNullOrWhiteSpace(ContactTitle.Text))
+                {
+                    item.ContactTitle = ContactTitle.Text;
+                }
+                if (!string.IsNullOrWhiteSpace(Region.Text))
+                {
+                    item.Region = Region.Text; //nullable
+                }
+
+                if (!string.IsNullOrWhiteSpace(PostalCode.Text))
+                {
+                    item.PostalCode = PostalCode.Text;
+                }
+                item.Address = Address.Text;
+                item.City = City.Text;
+                if (!string.IsNullOrWhiteSpace(Fax.Text))
+                {
+                    item.Fax = Fax.Text;//nullable
+                }
+
+                item.Country = CountryDropDown.Text;//From a drop down
+                item.Phone = Phone.Text;
+                item.Email = Email.Text;
+                //Send to BLL
+                var controller = new SupplierController();
+                int newSupplierID = controller.AddSupplier(item);
+                //Update form and give feedback
+                BindSupplierDropDown(); //New supplier
+                SupplierDropDown.SelectedValue = newSupplierID.ToString();
+                CurrentSupplier.Text = newSupplierID.ToString();
+                ShowMessage("Supplier has been added", STYLE_SUCCESS);
+            }
+            catch (Exception ex)
+            {
+                ShowMessage(ex.Message, STYLE_WARNING);
+            }
+        }
+
         #endregion
+
     }
 }

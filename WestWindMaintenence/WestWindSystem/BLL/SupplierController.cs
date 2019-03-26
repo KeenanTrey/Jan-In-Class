@@ -40,5 +40,16 @@ namespace WestWindSystem.BLL
                 return context.Suppliers.Find(id);
             }
         }
+
+        public int AddSupplier(Supplier item)
+        {
+           using(var context = new WestWindContext())
+            {
+                var added = context.Suppliers.Add(item);
+                context.SaveChanges();
+                //After saving changes, local context object syncs with newly add supplierID that was generated from table's identity constraints
+                return added.SupplierID;
+            }
+        }
     }
 }

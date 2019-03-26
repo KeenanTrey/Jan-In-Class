@@ -12,6 +12,10 @@
                 <asp:DropDownList ID="SupplierDropDown" runat="server" CssClass="form-control"></asp:DropDownList>
                 <asp:LinkButton ID="LookupSupplier" runat="server" CssClass="btn btn-primary" OnClick="LookupSupplier_Click">Look Up Suppliers</asp:LinkButton>
             </div>
+            <br /> <br />
+            <div>
+                <asp:LinkButton ID="AddSupplier" runat="server" CssClass="btn btn-default" OnClick="AddSupplier_Click">Add Supplier</asp:LinkButton>
+            </div>
         </div>
         <div class="col-md-6">
             <h4>Notes</h4>
