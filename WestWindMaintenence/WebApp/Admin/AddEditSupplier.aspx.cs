@@ -6,6 +6,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using WestWindModels;
 using WestWindSystem.BLL;
+using WestWindSystem.DataModels;
 
 namespace WebApp.Admin
 {
@@ -27,6 +28,7 @@ namespace WebApp.Admin
                 {
                     //throw new NotImplementedException("TBA");
                     BindSupplierDropDown();
+                    BindCountryDropDown();
                 }
                 catch (Exception ex)
                 {
@@ -63,6 +65,7 @@ namespace WebApp.Admin
                     PostalCode.Text = result.PostalCode;
                     Phone.Text = result.Phone;
                     Fax.Text = result.Fax;
+                    CountryDropDown.SelectedValue = result.Country;
 
                 }
                 catch (Exception ex)
@@ -75,6 +78,16 @@ namespace WebApp.Admin
         #endregion
 
         #region Private Methods
+        private void BindCountryDropDown()
+        {
+            SupplierController controller = new SupplierController();
+            CountryDropDown.DataSource = controller.ListCountries();
+            CountryDropDown.DataTextField = nameof(Country.Name);
+            CountryDropDown.DataValueField = nameof(Country.Name);
+            CountryDropDown.DataBind();
+            CountryDropDown.Items.Insert(0, "[Select a country]");
+        }
+
         private void BindSupplierDropDown()
         {
             SupplierController controller = new SupplierController();
@@ -89,6 +102,8 @@ namespace WebApp.Admin
             //Insert an item into index[0] for the frop down list
             SupplierDropDown.Items.Insert(0, new ListItem("[Select a supplier]", "-1"));
         }
+
+
 
         private void ShowMessage(string message, string style)
         {
