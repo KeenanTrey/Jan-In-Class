@@ -72,7 +72,7 @@
             <asp:RequiredFieldValidator ID="RequiredFieldValidator5" runat="server" ControlToValidate="EntryCode" Display="None" ErrorMessage="You must enter a code from the box of KD"/>
 
             <asp:RangeValidator ID="RangeValidator" runat="server" ControlToValidate="Age" Display="None" MinimumValue="16" MaximumValue="65" Type="Integer" ErrorMessage="Contest is only open to people between 16 and 65" />
-            <asp:RegularExpressionValidator ID="RegExpressionValidator" runat="server" ControlToValidate="PostalCode" Display ="None" ValidationExpression="\D\d\D d\D\d" ErrorMessage="Your postal code must be in the format A9A 9A9" />
+            <asp:RegularExpressionValidator ID="RegExpressionValidator" runat="server" ControlToValidate="PostalCode" Display ="None" ValidationExpression="\D\d\D \d\D\d" ErrorMessage="Your postal code must be in the format A9A 9A9" />
         </div>
     </div>
     <script src="Scripts/bootwrap-freecode.js"></script>

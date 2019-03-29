@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace WestWindModels
 {
     [Table("Customers", Schema = "dbo")]
-    public class Customers
+    public class Customer
     {
         [Key]
         public int CustomerID { get; set; }
