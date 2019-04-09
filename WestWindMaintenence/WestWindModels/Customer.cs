@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace WestWindModels
 {
-    [Table("Customers", Schema = "dbo")]
+    [Table("Customers")]
     public class Customer
     {
         [Key]
-        public int CustomerID { get; set; }
+        public string CustomerID { get; set; }
         public string CompanyName { get; set; }
         public string ContactName { get; set; }
         public string ContactTitle { get; set; }

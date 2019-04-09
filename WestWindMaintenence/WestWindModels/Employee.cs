@@ -30,9 +30,9 @@ namespace WestWindModels
         // varbinary is an array of bytes. Arrays are by nature reference types
         public byte[] Photo { get; set; } //varbinary null
 
-        private string _PhotoMimeType;
+        private string _PhotoMimeType;// use a field as my "backing store"
 
-        public string PhotoMimeType
+        public string PhotoMimeType // an explicitly implemented property
         {
             get { return _PhotoMimeType; }
             set

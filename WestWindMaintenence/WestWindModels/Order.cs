@@ -16,7 +16,7 @@ namespace WestWindModels
             [Key]
             public int OrderID { get; set; }
             public int SalesRepID { get; set; }
-            public string CutomerID { get; set; }
+            public string CustomerID { get; set; }
             public DateTime? OrderDate { get; set; }
             public DateTime? RequiredDate { get; set; }
             public decimal? Freight { get; set; }
