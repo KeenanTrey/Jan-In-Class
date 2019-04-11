@@ -24,6 +24,14 @@ namespace WestWindSystem.BLL
             }
         }
 
+        //public Product GetProduct(int productId)
+        //{
+        //   using (var context = new WestWindContext)
+        //    {
+        //        return
+        //    }
+        //}
+
         public Product LookupProduct(int productId)
         {
             using (var context = new WestWindContext())

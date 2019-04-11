@@ -12,17 +12,30 @@
                 <asp:TextBox ID="maxPrice" runat="server" Text="150" />
             </fieldset>
             <hr />
-            <asp:GridView ID="ProductsGridView" runat="server" AutoGenerateColumns="False" DataSourceID="ProductsDataSource" DataKeyNames="ProductID" CssClass="table table-condensed table-hover">
+            <div>
+                <asp:Label ID="label11" runat="server" />
+            </div>
+            <asp:GridView ID="ProductsGridView" runat="server" AutoGenerateColumns="False" DataSourceID="ProductsDataSource" DataKeyNames="ProductID" 
+                CssClass="table table-condensed table-hover" AllowPaging="True" ItemType="WestWindModels.Product" OnSelectedIndexChanged="ProductsGridView_SelectedIndexChanged">
                 <Columns>
+                    <asp:CommandField ShowSelectButton="True"></asp:CommandField>
                     <asp:BoundField DataField="ProductID" HeaderText="Product" ></asp:BoundField>
                     <asp:BoundField DataField="ProductName" HeaderText="Product" ></asp:BoundField>
-                    <asp:BoundField DataField="SupplierID" HeaderText="Supplier" ></asp:BoundField>
-                    <asp:BoundField DataField="CategoryID" HeaderText="Category" ></asp:BoundField>
-                    <asp:BoundField DataField="QuantityPerUnit" HeaderText="QtyPerUnit" ></asp:BoundField>
-                    <asp:BoundField DataField="MinimumOrderQuantity" HeaderText="Min Order Qty" ></asp:BoundField>
+                    <asp:TemplateField HeaderText="Supplier">
+                        <EditItemTemplate>
+                            <asp:TextBox runat="server" Text='<%# Item.SupplierID %>' ID="TextBox1"></asp:TextBox>
+                        </EditItemTemplate>
+                        <ItemTemplate>                           
+                            <asp:DropDownList ID="SupplierDropDown" runat="server" DataSourceID="SupplierDataSource" DataTextField="CompanyName" DataValueField="SupplierID" SelectedValue ="<%# Item.SupplierID %>" Enabled="false"></asp:DropDownList>
+                        </ItemTemplate>
+                    </asp:TemplateField>
+
+                    <asp:BoundField DataField="CategoryID" HeaderText="Category"></asp:BoundField>
+                    <asp:BoundField DataField="QuantityPerUnit" HeaderText="QtyPerUnit"></asp:BoundField>
+                    <asp:BoundField DataField="MinimumOrderQuantity" HeaderText="Min Order Qty"></asp:BoundField>
                     <asp:BoundField DataField="UnitPrice" HeaderText="Unit Price" DataFormatString="{0:c}"></asp:BoundField>
-                    <asp:BoundField DataField="UnitsOnOrder" HeaderText="Units On Order" ></asp:BoundField>
-                    <asp:CheckBoxField DataField="Discontinued" HeaderText="Discontinued" ></asp:CheckBoxField>
+                    <asp:BoundField DataField="UnitsOnOrder" HeaderText="Units On Order"></asp:BoundField>
+                    <asp:CheckBoxField DataField="Discontinued" HeaderText="Discontinued" Text="Is Discontinued"></asp:CheckBoxField>
                 </Columns>
             </asp:GridView>
 
@@ -32,6 +45,10 @@
                     <asp:ControlParameter ControlID="maxPrice" PropertyName="Text" Name="maxValue" Type="Decimal"></asp:ControlParameter>
                 </SelectParameters>
             </asp:ObjectDataSource>
+
+            <asp:ObjectDataSource ID="SupplierDataSource" runat="server" OldValuesParameterFormatString="original_{0}" SelectMethod="ListSuppliers" TypeName="WestWindSystem.BLL.SupplierController"></asp:ObjectDataSource>
+           
+            <asp:ObjectDataSource ID="CategoryDataSource" runat="server" OldValuesParameterFormatString="original_{0}" SelectMethod="ListCategories" TypeName="WestWindSystem.BLL.CategoryController"></asp:ObjectDataSource>
         </div>
     </div>
     <link href="../Content/bootwrap-freecode.css" rel="stylesheet" />

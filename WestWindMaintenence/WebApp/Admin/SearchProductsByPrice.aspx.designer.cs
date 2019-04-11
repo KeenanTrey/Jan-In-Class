@@ -58,6 +58,15 @@ namespace WebApp.Admin {
         protected global::System.Web.UI.WebControls.TextBox maxPrice;
         
         /// <summary>
+        /// label11 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label label11;
+        
+        /// <summary>
         /// ProductsGridView control.
         /// </summary>
         /// <remarks>
@@ -74,5 +83,23 @@ namespace WebApp.Admin {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.ObjectDataSource ProductsDataSource;
+        
+        /// <summary>
+        /// SupplierDataSource control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.ObjectDataSource SupplierDataSource;
+        
+        /// <summary>
+        /// CategoryDataSource control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.ObjectDataSource CategoryDataSource;
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Text;
@@ -10,8 +11,10 @@ using WestWindSystem.DataModels;
 
 namespace WestWindSystem.BLL
 {
+    [DataObject] //From system.ComponentModel namespace
     public class SupplierController
     {
+        [DataObjectMethod(DataObjectMethodType.Select)]
         //Used to help with Crud maintenence
         public List<Supplier> ListSuppliers()
         {
