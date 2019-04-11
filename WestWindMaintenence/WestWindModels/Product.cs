@@ -22,7 +22,7 @@ namespace WestWindModels
         //? = shorthand nullable<short>
         public decimal UnitPrice { get; set; } //money not null
         public int UnitsOnOrder { get; set; } //int not null
-        public bool IsDiscontinued { get; set; } //bit not null
+        public bool Discontinued { get; set; } //bit not null
        
     }
 
